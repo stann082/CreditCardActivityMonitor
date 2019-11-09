@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Common
 {
-    public class ApplicationLogger
+    public class ApplicationLogger : IApplicationLogger
     {
 
-        public static ApplicationLogger Singleton = new ApplicationLogger();
+        public static IApplicationLogger Singleton = new ApplicationLogger();
 
         #region Constructors
 

@@ -20,7 +20,7 @@ namespace Service
         #region Properties
 
         private CreditCardContext Context { get; set; }
-        private ApplicationLogger Logger { get { return ApplicationLogger.Singleton; } }
+        private IApplicationLogger Logger { get { return ApplicationLogger.Singleton; } }
 
         #endregion
 
