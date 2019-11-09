@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Service
 {
@@ -30,12 +31,31 @@ namespace Service
             int count = 0;
             foreach (CardActivity newActivity in newCardActivities)
             {
+                // guard clause - skip the existing entry
+                CardActivity existingCardActivity = Context.CardActivity.FirstOrDefault(ca => Matches(newActivity, ca));
+                if (existingCardActivity != null)
+                {
+                    continue;
+                }
+
                 count++;
                 Context.CardActivity.Add(newActivity);
             }
 
-            Logger.LogInformation($"Added {count} card activity items...Skipping duplicate items");
+            Logger.LogInformation($"Added {count} new credit card activity items... Skipped {newCardActivities.Length - count} duplicate items");
             Context.SaveChanges();
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private bool Matches(CardActivity newCardActivity, CardActivity existingCardActivity)
+        {
+            return newCardActivity.Date == existingCardActivity.Date &&
+                   newCardActivity.Category == existingCardActivity.Category &&
+                   newCardActivity.Amount == existingCardActivity.Amount &&
+                   newCardActivity.Description == existingCardActivity.Description;
         }
 
         #endregion
