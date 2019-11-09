@@ -1,5 +1,4 @@
-﻿using Domain;
-using Microsoft.Extensions.Logging;
+﻿using Common;
 using Service;
 using System;
 using System.IO;
@@ -28,7 +27,7 @@ namespace Interface
 
         private string ArchiveDirectory { get; set; }
         private ICreditCardService CreditCardService { get; set; }
-        private ILogger<ConsoleApplication> Logger { get { return ApplicationLogger.CreateLogger<ConsoleApplication>(); } }
+        private ApplicationLogger Logger { get { return ApplicationLogger.Singleton; } }
 
         #endregion
 
@@ -40,7 +39,7 @@ namespace Interface
             string[] postedActivityFiles = Directory.GetFiles(downloadsDir, "Discover-*.csv");
             if (postedActivityFiles.Length == 0)
             {
-                Logger.LogWarning("No pending or posted activity files were found...Exiting the app");
+                Logger.LogWarn("No pending or posted activity files were found...Exiting the app");
                 return;
             }
 
@@ -50,7 +49,7 @@ namespace Interface
             InitializeArchiveDirectory();
             foreach (string activityFile in postedActivityFiles)
             {
-                Logger.LogInformation($"Moving {activityFile}");
+                Logger.LogInfo($"Moving {activityFile}");
                 ArchiveFile(activityFile);
             }
         }

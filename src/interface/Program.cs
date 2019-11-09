@@ -1,9 +1,9 @@
-﻿using Domain;
+﻿using Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Service;
+using System;
 using System.IO;
 
 namespace Interface
@@ -15,6 +15,8 @@ namespace Interface
 
         #region Constants
 
+        private const string ENV_KEY_LOG_DIR = "LOG_DIR";
+        private const string ENV_VALUE_LOG_DIR = "logs";
         private const string CONNECTION_STRING_NAME = "CreditCardDatabase";
 
         #endregion
@@ -23,6 +25,8 @@ namespace Interface
 
         public static void Main(string[] args)
         {
+            InitializeApplicationEnvironment();
+
             IServiceCollection services = ConfigureServices();
             ServiceProvider serviceProvider = services.BuildServiceProvider();
             serviceProvider.GetService<ConsoleApplication>().Run();
@@ -34,6 +38,8 @@ namespace Interface
 
         private static IServiceCollection ConfigureServices()
         {
+            ApplicationLogger.Singleton.LogInfo("Initializing services...");
+
             IServiceCollection services = new ServiceCollection();
 
             IConfiguration config = LoadConfiguration();
@@ -42,20 +48,36 @@ namespace Interface
             services.AddDbContext<CreditCardContext>(o => o.UseMySQL(config.GetConnectionString(CONNECTION_STRING_NAME)));
             services.AddTransient<ConsoleApplication>();
 
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder
-                    .AddConfiguration(config.GetSection("Logging"))
-                    .AddFilter("Microsoft", LogLevel.Warning)
-                    .AddFilter("System", LogLevel.Warning)
-                    .AddFilter("Interface.Program", LogLevel.Debug)
-                    .AddConsole();
-            });
-
-            ApplicationLogger.LoggerFactory = loggerFactory;
-            loggerFactory.CreateLogger("Program").LogInformation("Initializing services...");
-
             return services;
+        }
+
+        private static string GetEnvironmentVariable(string key, string defaultValue)
+        {
+            try
+            {
+                string value = Environment.GetEnvironmentVariable(key);
+                if (value == null)
+                {
+                    ApplicationLogger.Singleton.LogWarn("ENVVAR with key [{0}] not found. Using default value of [{1}].", key, defaultValue);
+                    return defaultValue;
+                }
+                else
+                {
+                    ApplicationLogger.Singleton.LogInfo("ENVVAR with key [{0}] found. Using configured value of [{1}].", key, value);
+                    return value;
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Singleton.LogError(ex);
+                return defaultValue;
+            }
+        }
+
+        private static void InitializeApplicationEnvironment()
+        {
+            string logDir = GetEnvironmentVariable(ENV_KEY_LOG_DIR, ENV_VALUE_LOG_DIR);
+            ApplicationLogger.Singleton.Initialize(logDir);
         }
 
         public static IConfiguration LoadConfiguration()

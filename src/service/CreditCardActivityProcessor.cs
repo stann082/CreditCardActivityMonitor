@@ -1,5 +1,5 @@
-﻿using Domain;
-using Microsoft.Extensions.Logging;
+﻿using Common;
+using Domain;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace Service
 
         #region Properties
 
-        private ILogger<CreditCardActivityProcessor> Logger { get { return ApplicationLogger.CreateLogger<CreditCardActivityProcessor>(); } }
+        private ApplicationLogger Logger { get { return ApplicationLogger.Singleton; } }
         private List<CardActivityModel> PostedPayments { get; set; }
         private ICreditCardService Service { get; set; }
 
@@ -59,7 +59,7 @@ namespace Service
 
         private void ProcessPostedPayments(string[] postedActivityFiles)
         {
-            Logger.LogInformation("Processing payments...");
+            Logger.LogInfo("Processing payments...");
 
             PostedPayments = new List<CardActivityModel>();
 

@@ -1,5 +1,5 @@
-﻿using Domain;
-using Microsoft.Extensions.Logging;
+﻿using Common;
+using Domain;
 using System.Linq;
 
 namespace Service
@@ -20,7 +20,7 @@ namespace Service
         #region Properties
 
         private CreditCardContext Context { get; set; }
-        private ILogger<CreditCardService> Logger { get { return ApplicationLogger.CreateLogger<CreditCardService>(); } }
+        private ApplicationLogger Logger { get { return ApplicationLogger.Singleton; } }
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace Service
                 Context.CardActivity.Add(newActivity);
             }
 
-            Logger.LogInformation($"Added {count} new credit card activity items... Skipped {newCardActivities.Length - count} duplicate items");
+            Logger.LogInfo($"Added {count} new credit card activity items...Skipped {newCardActivities.Length - count} duplicate items");
             Context.SaveChanges();
         }
 
