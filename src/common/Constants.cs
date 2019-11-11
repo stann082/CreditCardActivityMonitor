@@ -6,7 +6,7 @@ namespace Common
     public static class Constants
     {
 
-        public static string USER_DOWNLOADS_DIR = "%USERPROFILE%\\Downloads";
+        public static string DOWNLOADS_DIR = @"C:\Temp\user-downloads";
 
     }
 

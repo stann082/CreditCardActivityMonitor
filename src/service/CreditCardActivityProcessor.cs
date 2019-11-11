@@ -12,7 +12,7 @@ namespace Service
 
         #region Constants
 
-        private const string ARCHIVE_ROOT_DIR = @"C:\Temp\archived-credit-card-statements";
+        private const string ARCHIVE_ROOT_DIR = @"C:\Temp\user-downloads";
 
         #endregion
 
@@ -38,8 +38,13 @@ namespace Service
 
         public void Process()
         {
-            string downloadsDir = Environment.ExpandEnvironmentVariables(Constants.USER_DOWNLOADS_DIR);
-            string[] activityFiles = Directory.GetFiles(downloadsDir, "Discover-*.csv");
+            if (!Directory.Exists(Constants.DOWNLOADS_DIR))
+            {
+                Logger.LogError($"Directory {Constants.DOWNLOADS_DIR} not found...Exiting the app");
+                return;
+            }
+
+            string[] activityFiles = Directory.GetFiles(Constants.DOWNLOADS_DIR, "Discover-*.csv");
             if (activityFiles.Length == 0)
             {
                 Logger.LogWarn("No pending or posted activity files were found...Exiting the app");

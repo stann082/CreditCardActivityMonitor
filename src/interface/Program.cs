@@ -25,11 +25,19 @@ namespace Interface
 
         public static void Main(string[] args)
         {
-            InitializeApplicationEnvironment();
+            try
+            {
+                InitializeApplicationEnvironment();
 
-            IServiceCollection services = ConfigureServices();
-            ServiceProvider serviceProvider = services.BuildServiceProvider();
-            serviceProvider.GetService<ConsoleApplication>().Run();
+                IServiceCollection services = ConfigureServices();
+                ServiceProvider serviceProvider = services.BuildServiceProvider();
+                serviceProvider.GetService<ConsoleApplication>().Run();
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Singleton.LogError("An un expected error has occurred...");
+                ApplicationLogger.Singleton.LogError(ex);
+            }
         }
 
         #endregion
