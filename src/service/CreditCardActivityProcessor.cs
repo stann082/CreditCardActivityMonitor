@@ -28,7 +28,7 @@ namespace Service
         #region Properties
 
         private string ArchiveDirectory { get; set; }
-        private IApplicationLogger Logger { get { return ApplicationLogger.Singleton; } }
+        private IApplicationLogger Logger => ApplicationLogger.Singleton;
         private List<CardActivityModel> PostedPayments { get; set; }
         private ICreditCardService Service { get; set; }
 

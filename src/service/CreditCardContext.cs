@@ -1,7 +1,6 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Service
 {
@@ -12,8 +11,8 @@ namespace Service
 
         #region Constructors
 
-        public CreditCardContext(IConfiguration configuration, ILogger<CreditCardContext> logger, DbContextOptions dbContextOptions) :
-            base(dbContextOptions)
+        public CreditCardContext(IConfiguration configuration, DbContextOptions dbContextOptions)
+            : base(dbContextOptions)
         {
             Configuration = configuration;
         }
@@ -27,11 +26,6 @@ namespace Service
         #endregion
 
         #region Overridden Methods
-
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            optionsBuilder.UseMySQL("server=localhost;database=creditcard;user=root;password=Tdev1529!");
-        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

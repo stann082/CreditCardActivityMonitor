@@ -19,11 +19,11 @@ namespace Domain
 
         #region Properties
 
-        public double Amount { get { return ParseAmount(); } }
+        public double Amount => ParseAmount();
 
         public string Category { get; set; }
 
-        public DateTime Date { get { return ParseDate(); } }
+        public DateTime Date => ParseDate();
         public string Description { get; set; }
 
         public string RawAmount { get; set; }
