@@ -17,7 +17,7 @@
     <property name="interface.dir" value="${src.dir}/interface" />
 
     <if test="${not property::exists('dotnet.configuration')}">
-        <property name="dotnet.configuration" value="Debug" />
+        <property name="dotnet.configuration" value="Release" />
     </if>
     <if test="${not property::exists('dotnet.version.dir')}">
         <property name="dotnet.version.dir" value="netcoreapp2.2" />
@@ -40,12 +40,12 @@
 
     <!-- Distribute the project component(s) (to the stage directory) -->
     <target name="dist">
+        <call target="__publish-components" />
         <call target="__stage-applications" />
     </target>
 
     <!-- Run all nant tasks in Release mode -->
     <target name="release">
-        <property name="dotnet.configuration" value="Release" />
         <call target="clean" />
         <call target="build" />
         <call target="test" />
@@ -63,7 +63,8 @@
     <!-- **************************************************************** -->
 
     <patternset id="application-includes.patternset">
-        <include name="*.dll" />
+        <include name="**/*" />
+        <exclude name="*.pdb" />
     </patternset>
 
     <fileset id="test-build.fileset" basedir=".">
@@ -118,11 +119,18 @@
         </delete>
     </target>
 
+    <target name="__publish-components">
+        <property name="action" value="publish" />
+        <property name="dotnet.verbosity" value="quiet" />
+        <call target="__dotnet-action" />
+    </target>
+
     <target name="__stage-applications">
         <mkdir dir="${stg.dir}" />
-        <echo message="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}" />
+        <property name="publish.dir" value="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}/publish" />
+        <echo message="${publish.dir}" />
         <copy todir="${stg.dir}">
-            <fileset basedir="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}">
+            <fileset basedir="${publish.dir}">
                 <patternset refid="application-includes.patternset" />
             </fileset>
         </copy>
