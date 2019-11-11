@@ -43,6 +43,15 @@
         <call target="__stage-applications" />
     </target>
 
+    <!-- Run all nant tasks in Release mode -->
+    <target name="release">
+        <property name="dotnet.configuration" value="Release" />
+        <call target="clean" />
+        <call target="build" />
+        <call target="test" />
+        <call target="dist" />
+    </target>
+
     <!-- Test the project component(s) -->
     <target name="test">
         <call target="__test-nunit" />
