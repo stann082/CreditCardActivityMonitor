@@ -10,11 +10,11 @@
 
     <property name="dotnet.filename" value="dotnet" />
 
-    <property name="src.dir" value="${project.dir}\src" />
-    <property name="stg.dir" value="${project.dir}\stg" />
-    <property name="tst.dir" value="${project.dir}\tst" />
+    <property name="src.dir" value="${project.dir}/src" />
+    <property name="stg.dir" value="${project.dir}/stg" />
+    <property name="tst.dir" value="${project.dir}/tst" />
 
-    <property name="interface.dir" value="${src.dir}\interface" />
+    <property name="interface.dir" value="${src.dir}/interface" />
 
     <if test="${not property::exists('dotnet.configuration')}">
         <property name="dotnet.configuration" value="Debug" />
@@ -58,7 +58,7 @@
     </patternset>
 
     <fileset id="test-build.fileset" basedir=".">
-        <include name="${project.dir}\CreditCardActivityMonitor.sln" />
+        <include name="${project.dir}/CreditCardActivityMonitor.sln" />
     </fileset>
  
 
@@ -111,9 +111,9 @@
 
     <target name="__stage-applications">
         <mkdir dir="${stg.dir}" />
-        <echo message="${interface.dir}\bin/${dotnet.configuration}\${dotnet.version.dir}" />
+        <echo message="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}" />
         <copy todir="${stg.dir}">
-            <fileset basedir="${interface.dir}\bin/${dotnet.configuration}\${dotnet.version.dir}">
+            <fileset basedir="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}">
                 <patternset refid="application-includes.patternset" />
             </fileset>
         </copy>

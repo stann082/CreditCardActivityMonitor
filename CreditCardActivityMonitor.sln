@@ -5,17 +5,17 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3B0AA7E1-B3DB-426F-914D-13BE35224E5F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interface", "src\interface\Interface.csproj", "{4E69950B-190F-48F5-9010-7B5D15F65678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interface", "src\interface\interface.csproj", "{4E69950B-190F-48F5-9010-7B5D15F65678}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "src\service\Service.csproj", "{BAC1791D-B129-4703-B36A-0EF17A138F94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "src\service\service.csproj", "{BAC1791D-B129-4703-B36A-0EF17A138F94}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\domain\Domain.csproj", "{453171C3-5F03-40A9-96EC-EF80528760E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\domain\domain.csproj", "{453171C3-5F03-40A9-96EC-EF80528760E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\common\Common.csproj", "{2F90C163-2AD1-47D6-ADE0-F156BE4033DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\common\common.csproj", "{2F90C163-2AD1-47D6-ADE0-F156BE4033DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{3AB07DD6-46B0-4C18-9840-F0319637289C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTest", "tst\domain\DomainTest.csproj", "{998A0176-4CF6-493A-B086-1FBBAF8CC24F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTest", "tst\domain\domain-test.csproj", "{998A0176-4CF6-493A-B086-1FBBAF8CC24F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
