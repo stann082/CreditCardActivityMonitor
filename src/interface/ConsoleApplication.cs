@@ -1,6 +1,6 @@
-﻿using Service;
+﻿using service;
 
-namespace Interface
+namespace app
 {
     public class ConsoleApplication
     {

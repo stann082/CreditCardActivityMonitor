@@ -1,8 +1,8 @@
-﻿using Common;
-using Domain;
+﻿using common;
+using domain;
 using System.Linq;
 
-namespace Service
+namespace service
 {
     public class CreditCardService : ICreditCardService
     {

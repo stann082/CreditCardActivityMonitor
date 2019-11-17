@@ -1,12 +1,12 @@
-﻿using Common;
+﻿using common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Service;
+using service;
 using System;
 using System.IO;
 
-namespace Interface
+namespace app
 {
     public static class Program
     {

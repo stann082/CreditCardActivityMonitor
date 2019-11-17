@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain
+namespace domain
 {
     public class CardActivityModel
     {

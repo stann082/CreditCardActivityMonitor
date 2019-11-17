@@ -1,20 +1,16 @@
-﻿using Domain;
+﻿using domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
-namespace Service
+namespace service
 {
     public class CreditCardContext : DbContext
     {
 
-        private readonly IConfiguration Configuration;
-
         #region Constructors
 
-        public CreditCardContext(IConfiguration configuration, DbContextOptions dbContextOptions)
+        public CreditCardContext(DbContextOptions dbContextOptions)
             : base(dbContextOptions)
         {
-            Configuration = configuration;
         }
 
         #endregion

@@ -1,18 +1,17 @@
-﻿using Common;
-using Domain;
+﻿using common;
+using domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Service
+namespace service
 {
     public class CreditCardActivityProcessor
     {
 
         #region Constants
 
-        private const string ARCHIVE_ROOT_DIR = @"C:\Temp\user-downloads";
 
         #endregion
 
@@ -27,9 +26,15 @@ namespace Service
 
         #region Properties
 
-        private string ArchiveDirectory { get; set; }
+        private string ArchiveDir { get; set; }
+        private string ArchiveRootDir => DirectoryProvider.Singleton.ArchiveRootDir;
+
+        private string DownloadsDir => DirectoryProvider.Singleton.DownloadsDir;
+
         private IApplicationLogger Logger => ApplicationLogger.Singleton;
+
         private List<CardActivityModel> PostedPayments { get; set; }
+
         private ICreditCardService Service { get; set; }
 
         #endregion
@@ -38,13 +43,13 @@ namespace Service
 
         public void Process()
         {
-            if (!Directory.Exists(Constants.DOWNLOADS_DIR))
+            if (!Directory.Exists(DownloadsDir))
             {
-                Logger.LogError($"Directory {Constants.DOWNLOADS_DIR} not found...Exiting the app");
+                Logger.LogError(DownloadsDir);
                 return;
             }
 
-            string[] activityFiles = Directory.GetFiles(Constants.DOWNLOADS_DIR, "Discover-*.csv");
+            string[] activityFiles = Directory.GetFiles(DownloadsDir, "Discover-*.csv");
             if (activityFiles.Length == 0)
             {
                 Logger.LogWarn("No pending or posted activity files were found...Exiting the app");
@@ -74,19 +79,19 @@ namespace Service
             }
 
             string fileName = Path.GetFileName(filePath);
-            File.Move(filePath, Path.Combine(ArchiveDirectory, fileName));
+            File.Move(filePath, Path.Combine(ArchiveDir, fileName));
         }
 
         private void InitializeArchiveDirectory()
         {
             string timeStamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            ArchiveDirectory = Path.Combine(ARCHIVE_ROOT_DIR, timeStamp);
-            if (Directory.Exists(ArchiveDirectory))
+            ArchiveDir = Path.Combine(ArchiveRootDir, timeStamp);
+            if (Directory.Exists(ArchiveDir))
             {
                 return;
             }
 
-            Directory.CreateDirectory(ArchiveDirectory);
+            Directory.CreateDirectory(ArchiveDir);
         }
 
         private CardActivity CreateActivity(CardActivityModel model)
@@ -132,7 +137,7 @@ namespace Service
                     else if (activityText.Length > 5)
                     {
                         activityModel.RawDate = activityText[1];
-                        activityModel.Description = $"{activityText[2]}, {activityText[3]}".Trim('"');
+                        activityModel.Description = $"{activityText[2]},{activityText[3]}".Trim('"');
                         activityModel.RawAmount = activityText[4];
                         activityModel.Category = activityText[5].Trim('"');
                     }

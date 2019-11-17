@@ -1,6 +1,6 @@
-﻿using Domain;
+﻿using domain;
 
-namespace Service
+namespace service
 {
     public interface ICreditCardService
     {

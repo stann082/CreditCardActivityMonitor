@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Common
+namespace common
 {
     public class ApplicationLogger : IApplicationLogger
     {

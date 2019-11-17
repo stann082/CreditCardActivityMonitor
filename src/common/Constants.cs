@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace Common
+namespace common
 {
 
     public static class Constants
     {
 
-        public static string DOWNLOADS_DIR = @"C:\Temp\user-downloads";
+        public const string ARCHIVE_ROOT_DIR = @"C:\Temp\archived-credit-card-statements";
+        public const string DOWNLOADS_DIR = @"C:\Temp\user-downloads";
 
     }
 

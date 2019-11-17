@@ -1,7 +1,7 @@
-﻿using Common;
+﻿using common;
 using System;
 
-namespace Domain
+namespace domain
 {
     public class CardActivity
     {
