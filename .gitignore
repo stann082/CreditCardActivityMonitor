@@ -368,3 +368,5 @@ MigrationBackup/
 # Ignore all local history of files
 .history
 
+# Custom
+.sonarqube/

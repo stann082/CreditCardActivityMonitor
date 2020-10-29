@@ -20,7 +20,7 @@
         <property name="dotnet.configuration" value="Release" />
     </if>
     <if test="${not property::exists('dotnet.version.dir')}">
-        <property name="dotnet.version.dir" value="netcoreapp2.2" />
+        <property name="dotnet.version.dir" value="net5.0" />
     </if>
 
     <!-- **************************************************************** -->
@@ -47,9 +47,15 @@
     <!-- Run all nant tasks in Release mode -->
     <target name="release">
         <call target="clean" />
+        <call target="restore" />
         <call target="build" />
         <call target="test" />
         <call target="dist" />
+    </target>
+
+    <!-- Restore the project component(s) -->
+    <target name="restore">
+        <call target="__restore-components" />
     </target>
 
     <!-- Test the project component(s) -->
@@ -97,13 +103,13 @@
                 <property name="buildfile.dir" value="${path::get-directory-name(buildfile)}" />
                 <property name="buildfile.name" value="${path::get-file-name(buildfile)}" />
                 <echo />
-                <echo message="Auto-${action}ing ${buildfile}..." />
+                <echo message="Auto-${action} ${buildfile}..." />
                 <echo />
                 <exec workingdir="${buildfile.dir}" program="${dotnet.filename}">
                     <arg value="${action}" />
                     <arg value="${buildfile.name}" />
-                    <arg value="--configuration" />
-                    <arg value="${dotnet.configuration}" />
+                    <arg value="--configuration" unless="${action=='restore'}" />
+                    <arg value="${dotnet.configuration}" unless="${action=='restore'}" />
                     <arg value="--verbosity" />
                     <arg value="${dotnet.verbosity}" />
                 </exec>
@@ -121,6 +127,12 @@
 
     <target name="__publish-components">
         <property name="action" value="publish" />
+        <property name="dotnet.verbosity" value="quiet" />
+        <call target="__dotnet-action" />
+    </target>
+
+    <target name="__restore-components">
+        <property name="action" value="restore" />
         <property name="dotnet.verbosity" value="quiet" />
         <call target="__dotnet-action" />
     </target>
