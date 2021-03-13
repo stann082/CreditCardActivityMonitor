@@ -370,3 +370,4 @@ MigrationBackup/
 
 # Custom
 .sonarqube/
+sonar-key.txt
