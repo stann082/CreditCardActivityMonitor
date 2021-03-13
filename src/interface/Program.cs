@@ -32,6 +32,11 @@ namespace app
                 IServiceCollection services = ConfigureServices();
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
                 serviceProvider.GetService<ConsoleApplication>().Run();
+
+#if DEBUG
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadLine();
+#endif
             }
             catch (Exception ex)
             {
