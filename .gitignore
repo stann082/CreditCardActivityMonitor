@@ -371,3 +371,4 @@ MigrationBackup/
 # Custom
 .sonarqube/
 sonar-key.txt
+appsettings-prod.json

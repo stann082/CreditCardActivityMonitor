@@ -28,7 +28,7 @@ namespace service_test
         public void BlueSkyTest_AddActivities()
         {
             // pre-conditions
-            Assert.AreEqual(0, Context.CardActivity.Local.Count);
+            Assert.AreEqual(0, Context.cardactivity.Local.Count);
 
             // exercise
             CardActivity cardActivity = new CardActivity();
@@ -39,7 +39,7 @@ namespace service_test
             Service.AddActivities(new CardActivity[] { cardActivity });
 
             // post-conditions
-            Assert.AreEqual(1, Context.CardActivity.Local.Count);
+            Assert.AreEqual(1, Context.cardactivity.Local.Count);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace service_test
             Service.AddActivities(new CardActivity[] { cardActivity1 });
 
             // pre-conditions
-            Assert.AreEqual(1, Context.CardActivity.Local.Count);
+            Assert.AreEqual(1, Context.cardactivity.Local.Count);
 
             // exercise
             CardActivity cardActivity2 = new CardActivity();
@@ -65,7 +65,7 @@ namespace service_test
             Service.AddActivities(new CardActivity[] { cardActivity1, cardActivity2 });
 
             // post-conditions
-            Assert.AreEqual(2, Context.CardActivity.Local.Count);
+            Assert.AreEqual(2, Context.cardactivity.Local.Count);
         }
 
         #region Helper Methods

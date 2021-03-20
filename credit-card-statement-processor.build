@@ -38,13 +38,9 @@
         <call target="__build-components" />
     </target>
 
-    <target name="deploy-local">
+    <target name="deploy">
         <call target="__publish-components" />
         <call target="__stage-applications" />
-    </target>
-
-    <target name="deploy-remote">
-        <!-- TODO: Implement deployment to the remote server -->
     </target>
 
     <target name="release">
@@ -70,6 +66,7 @@
 
     <patternset id="application-includes.patternset">
         <include name="**/runtimes/**" />
+        <include name="app" />
         <include name="*.dll" />
         <include name="*.exe" />
         <include name="*.json" />

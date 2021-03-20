@@ -32,14 +32,14 @@ namespace service
             foreach (CardActivity newActivity in newCardActivities)
             {
                 // guard clause - skip the existing entry
-                CardActivity existingCardActivity = Context.CardActivity.FirstOrDefault(ca => Matches(newActivity, ca));
+                CardActivity existingCardActivity = Context.cardactivity.FirstOrDefault(ca => Matches(newActivity, ca));
                 if (existingCardActivity != null)
                 {
                     continue;
                 }
 
                 count++;
-                Context.CardActivity.Add(newActivity);
+                Context.cardactivity.Add(newActivity);
             }
 
             Logger.LogInfo($"Added {count} new credit card activity items...Skipped {newCardActivities.Length - count} duplicate items");

@@ -17,7 +17,7 @@ namespace service
 
         #region Properties
 
-        public DbSet<CardActivity> CardActivity { get; set; }
+        public DbSet<CardActivity> cardactivity { get; set; }
 
         #endregion
 
