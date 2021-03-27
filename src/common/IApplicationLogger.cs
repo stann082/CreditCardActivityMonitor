@@ -5,12 +5,17 @@ namespace common
     public interface IApplicationLogger
     {
 
+        // TODO: find a more elegant way to disable logging in tests
+        void DisableLogging();
+
         void Initialize(string logDirectory);
 
         void LogError(Exception ex);
-        void LogError(string inputText, params object[] replacements);
-        void LogInfo(string inputText, params object[] replacements);
-        void LogWarn(string inputText, params object[] replacements);
+        void LogError(string message);
+        void LogInfo(string message);
+        void LogWarn(string message);
+
+        void SetType(Type type);
 
     }
 }

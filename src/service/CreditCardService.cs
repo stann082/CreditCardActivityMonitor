@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace service
 {
-    public class CreditCardService : ICreditCardService
+    public class CreditCardService : AbstractBase, ICreditCardService
     {
 
         #region Constructors
@@ -20,7 +20,7 @@ namespace service
         #region Properties
 
         private CreditCardContext Context { get; set; }
-        private IApplicationLogger Logger => ApplicationLogger.Singleton;
+        private IApplicationLogger Logger { get { return GetApplicationLogger<CreditCardService>(); } }
 
         #endregion
 

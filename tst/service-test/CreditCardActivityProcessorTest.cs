@@ -15,14 +15,14 @@ namespace domain
         [TestInitialize]
         public void SetUp()
         {
-            ApplicationLogger.Singleton = new MockApplicationLogger();
+            ApplicationLogger.Singleton.DisableLogging();
             DirectoryProvider.Singleton = new MockDirectoryProvider();
 
             Service = new MockCreditCardService();
             Processor = new CreditCardActivityProcessor(Service);
         }
 
-        private string DownloadsDir => DirectoryProvider.Singleton.DownloadsDir;
+        private static string DownloadsDir => DirectoryProvider.Singleton.DownloadsDir;
         private CreditCardActivityProcessor Processor;
         private MockCreditCardService Service;
 
