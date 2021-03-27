@@ -15,8 +15,8 @@
 
         #region Properties
 
-        public string ArchiveRootDir => Constants.ARCHIVE_ROOT_DIR;
-        public string DownloadsDir => Constants.DOWNLOADS_DIR;
+        public string ArchiveRootDir => ApplicationEnvironment.Singleton.ArchiveRootDir;
+        public string DownloadsDir => ApplicationEnvironment.Singleton.DownloadsDir;
 
         #endregion
 

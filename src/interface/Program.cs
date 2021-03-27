@@ -64,7 +64,7 @@ namespace app
             return services;
         }
 
-        private static string GetEnvironmentVariable(string key, string defaultValue)
+        private static string GetLogEnvironmentVariables(string key, string defaultValue)
         {
             try
             {
@@ -89,8 +89,9 @@ namespace app
 
         private static void InitializeApplicationEnvironment()
         {
-            string logDir = GetEnvironmentVariable(ENV_KEY_LOG_DIR, ENV_VALUE_LOG_DIR);
+            string logDir = GetLogEnvironmentVariables(ENV_KEY_LOG_DIR, ENV_VALUE_LOG_DIR);
             ApplicationLogger.Singleton.Initialize(logDir);
+            ApplicationEnvironment.Singleton.Initialize();
         }
 
         public static IConfiguration LoadConfiguration()

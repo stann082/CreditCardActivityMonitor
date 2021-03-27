@@ -3,14 +3,6 @@
 namespace common
 {
 
-    public static class Constants
-    {
-
-        public const string ARCHIVE_ROOT_DIR = @"C:\Temp\archived-credit-card-statements";
-        public const string DOWNLOADS_DIR = @"C:\Temp\user-downloads";
-
-    }
-
     public enum ActivityType
     {
         Purchase = 0,
