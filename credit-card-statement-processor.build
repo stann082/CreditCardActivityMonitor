@@ -14,14 +14,23 @@
     <property name="stg.dir" value="${project.dir}/stg" />
     <property name="tst.dir" value="${project.dir}/tst" />
 
-    <property name="appdata.dir" value="${environment::get-variable('APPDATA')}" />
-    <property name="dpl.lcl.dir" value="${appdata.dir}/CreditCardActivityMonitor" />
+    <property name="os" value="${environment::get-operating-system()}" />
 
+    <property name="is-windows-os" value="${string::contains(os, 'Windows')}" />
+    <call target="__configure-for-windows" if="${is-windows-os}" />
+
+    <property name="is-unix-os" value="${string::contains(os, 'Unix')}" />
+    <call target="__configure-for-unix" if="${is-unix-os}" />
+
+    <fail message="Could not determine the OS..." unless="${is-windows-os or is-unix-os}" />
+
+    <property name="dpl.lcl.dir" value="${appdata.dir}/CreditCardActivityMonitor" />
     <property name="interface.dir" value="${src.dir}/interface" />
 
     <if test="${not property::exists('dotnet.configuration')}">
         <property name="dotnet.configuration" value="Release" />
     </if>
+
     <if test="${not property::exists('dotnet.version.dir')}">
         <property name="dotnet.version.dir" value="net5.0" />
     </if>
@@ -29,6 +38,10 @@
     <!-- **************************************************************** -->
     <!-- Public tasks                                                     -->
     <!-- **************************************************************** -->
+
+    <target name="check-configs">
+        <echo message="${appdata.dir}" />
+    </target>
 
     <target name="clean">
         <call target="__clean-components" />
@@ -59,6 +72,18 @@
         <call target="__test-nunit" />
     </target>
 
+    <!-- *********************************************** -->
+    <!-- Configuration tasks                             -->
+    <!-- *********************************************** -->
+
+    <target name="__configure-for-unix">
+        <property name="appdata.dir" value="${environment::get-variable('HOME')}/.local/apps" />
+    </target>
+
+    <target name="__configure-for-windows">
+        <property name="appdata.dir" value="${environment::get-variable('APPDATA')}" />
+    </target>
+
     <!-- **************************************************************** -->
     <!-- Private filesets (useful for sharing fileset definitions)        -->
     <!-- NOTE: fileset contents are determined each time they're included -->
@@ -66,9 +91,9 @@
 
     <patternset id="application-includes.patternset">
         <include name="**/runtimes/**" />
-        <include name="app" />
+        <include name="app" if="${is-unix-os}" />
+        <include name="*.exe" if="${is-windows-os}" />
         <include name="*.dll" />
-        <include name="*.exe" />
         <include name="*.json" />
         <exclude name="**/logs" />
         <exclude name="*.pdb" />
