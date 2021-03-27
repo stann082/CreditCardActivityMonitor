@@ -10,6 +10,10 @@
 
     <property name="dotnet.filename" value="dotnet" />
 
+    <property name="cfg.dir" value="${project.dir}/cfg" />
+    <property name="cfg.dev.config" value="${cfg.dir}/appsettings.dev.json" />
+    <property name="cfg.prod.config" value="${cfg.dir}/appsettings.prod.json" />
+
     <property name="src.dir" value="${project.dir}/src" />
     <property name="stg.dir" value="${project.dir}/stg" />
     <property name="tst.dir" value="${project.dir}/tst" />
@@ -27,12 +31,20 @@
     <property name="dpl.lcl.dir" value="${appdata.dir}/CreditCardActivityMonitor" />
     <property name="interface.dir" value="${src.dir}/interface" />
 
+    <!-- **************************************************************** -->
+    <!-- Overridable Properties                                           -->
+    <!-- **************************************************************** -->
+
     <if test="${not property::exists('dotnet.configuration')}">
         <property name="dotnet.configuration" value="Release" />
     </if>
 
     <if test="${not property::exists('dotnet.version.dir')}">
         <property name="dotnet.version.dir" value="net5.0" />
+    </if>
+
+    <if test="${not property::exists('clean.deploy.dir')}">
+        <property name="clean.deploy.dir" value="false" />
     </if>
 
     <!-- **************************************************************** -->
@@ -53,7 +65,7 @@
 
     <target name="deploy">
         <call target="__publish-components" />
-        <call target="__stage-applications" />
+        <call target="__deploy-applications" />
     </target>
 
     <target name="release">
@@ -120,7 +132,24 @@
         <call target="__dotnet-action" />
     </target>
 
-    <target name="__deploy-local-clean">
+    <target name="__deploy-applications">
+        <if test="${clean.deploy.dir}">
+            <call target="__deploy-clean" />
+        </if>
+
+        <mkdir dir="${dpl.lcl.dir}" />
+
+        <property name="publish.dir" value="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}/publish" />
+        <echo message="${publish.dir}" />
+        <copy todir="${dpl.lcl.dir}">
+            <fileset basedir="${publish.dir}">
+                <patternset refid="application-includes.patternset" />
+            </fileset>
+        </copy>
+        <copy file="${cfg.prod.config}" tofile="${dpl.lcl.dir}/appsettings.json" overwrite="true" />
+    </target>
+
+    <target name="__deploy-clean">
         <delete>
             <fileset basedir="${dpl.lcl.dir}">
                 <include name="**/*" />
@@ -161,19 +190,6 @@
         <property name="action" value="restore" />
         <property name="dotnet.verbosity" value="quiet" />
         <call target="__dotnet-action" />
-    </target>
-
-    <target name="__stage-applications">
-        <call target="__deploy-local-clean" />
-        <mkdir dir="${dpl.lcl.dir}" />
-
-        <property name="publish.dir" value="${interface.dir}/bin/${dotnet.configuration}/${dotnet.version.dir}/publish" />
-        <echo message="${publish.dir}" />
-        <copy todir="${dpl.lcl.dir}">
-            <fileset basedir="${publish.dir}">
-                <patternset refid="application-includes.patternset" />
-            </fileset>
-        </copy>
     </target>
 
     <target name="__test-nunit">

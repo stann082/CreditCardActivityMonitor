@@ -1,4 +1,4 @@
-﻿using common;
+using common;
 using domain;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ namespace service
     {
 
         #region Constants
-
 
         #endregion
 
@@ -27,11 +26,11 @@ namespace service
         #region Properties
 
         private string ArchiveDir { get; set; }
-        private string ArchiveRootDir => DirectoryProvider.Singleton.ArchiveRootDir;
+        private static string ArchiveRootDir => DirectoryProvider.Singleton.ArchiveRootDir;
 
-        private string DownloadsDir => DirectoryProvider.Singleton.DownloadsDir;
+        private static string DownloadsDir => DirectoryProvider.Singleton.DownloadsDir;
 
-        private IApplicationLogger Logger => ApplicationLogger.Singleton;
+        private static IApplicationLogger Logger => ApplicationLogger.Singleton;
 
         private List<CardActivityModel> PostedPayments { get; set; }
 
@@ -82,6 +81,13 @@ namespace service
             File.Move(filePath, Path.Combine(ArchiveDir, fileName));
         }
 
+        private CardActivity CreateActivity(CardActivityModel model)
+        {
+            CardActivity cardActivity = new CardActivity();
+            cardActivity.CopyFrom(model);
+            return cardActivity;
+        }
+
         private void InitializeArchiveDirectory()
         {
             string timeStamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
@@ -92,13 +98,6 @@ namespace service
             }
 
             Directory.CreateDirectory(ArchiveDir);
-        }
-
-        private CardActivity CreateActivity(CardActivityModel model)
-        {
-            CardActivity cardActivity = new CardActivity();
-            cardActivity.CopyFrom(model);
-            return cardActivity;
         }
 
         private void InsertData()
