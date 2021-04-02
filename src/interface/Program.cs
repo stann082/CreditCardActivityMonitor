@@ -32,7 +32,7 @@ namespace app
         {
             try
             {
-                InitializeApplicationEnvironment();
+                InitializeApplicationEnvironment(args);
 
                 IServiceCollection services = ConfigureServices();
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -101,9 +101,9 @@ namespace app
             }
         }
 
-        private static void InitializeApplicationEnvironment()
+        private static void InitializeApplicationEnvironment(string[] args)
         {
-            Logger.Initialize(LOG_DIR);
+            Logger.Initialize(LOG_DIR, args);
             ApplicationEnvironment.Singleton.Initialize();
         }
 

@@ -15,7 +15,9 @@ namespace domain
         [TestInitialize]
         public void SetUp()
         {
-            ApplicationLogger.Singleton.DisableLogging();
+            string[] logArgs = new string[] { "--no-console-log", "--no-file-log" };
+            ApplicationLogger.Singleton.Initialize(string.Empty, logArgs);
+
             DirectoryProvider.Singleton = new MockDirectoryProvider();
 
             Service = new MockCreditCardService();

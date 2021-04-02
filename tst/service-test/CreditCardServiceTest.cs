@@ -14,7 +14,8 @@ namespace service_test
         [TestInitialize]
         public void SetUp()
         {
-            ApplicationLogger.Singleton.DisableLogging();
+            string[] logArgs = new string[] { "--no-console-log", "--no-file-log" };
+            ApplicationLogger.Singleton.Initialize(string.Empty, logArgs);
 
             Context = CreateDbContext();
             Service = new CreditCardService(Context);

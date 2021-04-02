@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace common
@@ -31,7 +32,8 @@ namespace common
         private ApplicationLogger()
         {
             EnableConsoleLogging = LogLevel.All;
-            EnabledFileLogging = LogLevel.All;
+            EnableFileLogging = LogLevel.All;
+            UseUtcTimestamp = false;
 
             LogDirectory = "logs";
         }
@@ -41,22 +43,19 @@ namespace common
         #region Properties
 
         private LogLevel EnableConsoleLogging { get; set; }
-        private LogLevel EnabledFileLogging { get; set; }
+        private LogLevel EnableFileLogging { get; set; }
         private string LogDirectory { get; set; }
         private Type Type { get; set; }
+        private bool UseUtcTimestamp { get; set; }
 
         #endregion
 
         #region Public Methods
 
-        public void DisableLogging()
+        public void Initialize(string logDirectory, string[] logArgs)
         {
-            EnableConsoleLogging = LogLevel.None;
-            EnabledFileLogging = LogLevel.None;
-        }
+            SetLoggingLevel(logArgs);
 
-        public void Initialize(string logDirectory)
-        {
             if (!Path.IsPathRooted(logDirectory))
             {
                 logDirectory = Path.Combine(Environment.CurrentDirectory, logDirectory);
@@ -109,7 +108,7 @@ namespace common
 
         private bool IsFileLoggingEnabled(LogLevel logLevel)
         {
-            return IsLogLevelEnabled(EnabledFileLogging, logLevel);
+            return IsLogLevelEnabled(EnableFileLogging, logLevel);
         }
 
         private bool IsLogLevelEnabled(LogLevel enabledLogLevels, LogLevel logLevel)
@@ -127,30 +126,24 @@ namespace common
                 return;
             }
 
-            DateTime now = DateTime.Now;
+            DateTime now = !UseUtcTimestamp ? DateTime.Now : DateTime.UtcNow;
             try
             {
-                StringBuilder levelLogLine = new StringBuilder();
-                levelLogLine.Append(now.ToString("yyyy-MM-dd HH:mm:ss.ffff"));
-                levelLogLine.Append("  ");
-                levelLogLine.Append(logLevel.ToString().ToLower());
-                levelLogLine.Append(": ");
-                levelLogLine.Append($"{Type}");
-                levelLogLine.Append(Environment.NewLine);
-                StringBuilder messageLogLine = new StringBuilder();
-                messageLogLine.Append(message);
-                messageLogLine.Append(Environment.NewLine);
+                ILogBuilder builder = new LogBuilder(message, logLevel, Type, now);
+                builder.BuildLogEntry();
 
-                string logTextValue = levelLogLine.ToString() + messageLogLine.ToString();
+                ILogWriter writer;
+
                 if (isConsoleLogLevelEnabled)
                 {
-                    bool shouldWriteToStandardError = logLevel == LogLevel.Error || logLevel == LogLevel.Fatal;
-                    WriteToConsole(logTextValue, shouldWriteToStandardError);
+                    writer = new ConsoleLogWriter();
+                    writer.Write(builder);
                 }
 
                 if (isFileLogLevelEnabled)
                 {
-                    WriteToFile(logTextValue, now);
+                    writer = new FileLogWriter(LogDirectory, now);
+                    writer.Write(builder);
                 }
             }
             catch
@@ -159,18 +152,11 @@ namespace common
             }
         }
 
-        private void WriteToConsole(string logTextValue, bool shouldWriteToStandardError)
+        private void SetLoggingLevel(string[] logArgs)
         {
-            if (shouldWriteToStandardError)
-            {
-                Console.Error.WriteLine(logTextValue);
-            }
-            else
-            {
-                Console.WriteLine(logTextValue);
-            }
-
-            Console.ResetColor();
+            EnableConsoleLogging = logArgs.Any(a => a == "--no-console-log") ? LogLevel.None : EnableConsoleLogging;
+            EnableFileLogging = logArgs.Any(a => a == "--no-file-log") ? LogLevel.None : EnableConsoleLogging;
+            UseUtcTimestamp = logArgs.Any(a => a == "--use-utc");
         }
 
         private void WriteToFile(string logTextValue, DateTime now)
