@@ -10,7 +10,7 @@ namespace common
     }
 
     [Flags]
-    public enum LogLevel
+    public enum LogLevels
     {
         None = 0x00000000,
         Debug = 0x00000001,

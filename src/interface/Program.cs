@@ -78,29 +78,6 @@ namespace app
             return services;
         }
 
-        private static string GetLogEnvironmentVariables(string key, string defaultValue)
-        {
-            try
-            {
-                string value = Environment.GetEnvironmentVariable(key);
-                if (value == null)
-                {
-                    Logger.LogWarn($"ENVVAR with key [{key}] not found. Using default value of [{defaultValue}].");
-                    return defaultValue;
-                }
-                else
-                {
-                    Logger.LogInfo($"ENVVAR with key [{key}] found. Using configured value of [{value}].");
-                    return value;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex);
-                return defaultValue;
-            }
-        }
-
         private static void InitializeApplicationEnvironment(string[] args)
         {
             Logger.Initialize(LOG_DIR, args);

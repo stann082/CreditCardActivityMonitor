@@ -21,7 +21,7 @@ namespace common
 
         #region Helper Methods
 
-        private void AppendLogLevel(LogLevel logLevel)
+        private void AppendLogLevel(LogLevels logLevel)
         {
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = GetLogLevelColor(logLevel);
@@ -34,16 +34,16 @@ namespace common
             Console.Write(logSegment);
         }
 
-        private ConsoleColor GetLogLevelColor(LogLevel logLevel)
+        private ConsoleColor GetLogLevelColor(LogLevels logLevel)
         {
             switch (logLevel)
             {
-                case LogLevel.Fatal:
-                case LogLevel.Error:
+                case LogLevels.Fatal:
+                case LogLevels.Error:
                     return ConsoleColor.Red;
-                case LogLevel.Info:
+                case LogLevels.Info:
                     return ConsoleColor.Green;
-                case LogLevel.Warn:
+                case LogLevels.Warn:
                     return ConsoleColor.Yellow;
                 default:
                     return Console.ForegroundColor;

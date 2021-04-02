@@ -26,10 +26,10 @@ namespace service
 
         #region Public Methods
 
-        public void AddActivities(CardActivity[] newCardActivities)
+        public void AddActivities(CardActivity[] cardActivities)
         {
             int count = 0;
-            foreach (CardActivity newActivity in newCardActivities)
+            foreach (CardActivity newActivity in cardActivities)
             {
                 // guard clause - skip the existing entry
                 CardActivity existingCardActivity = Context.cardactivity.FirstOrDefault(ca => Matches(newActivity, ca));
@@ -42,7 +42,7 @@ namespace service
                 Context.cardactivity.Add(newActivity);
             }
 
-            Logger.LogInfo($"Added {count} new credit card activity items...Skipped {newCardActivities.Length - count} duplicate items");
+            Logger.LogInfo($"Added {count} new credit card activity items...Skipped {cardActivities.Length - count} duplicate items");
             Context.SaveChanges();
         }
 

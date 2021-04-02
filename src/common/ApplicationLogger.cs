@@ -31,8 +31,8 @@ namespace common
 
         private ApplicationLogger()
         {
-            EnableConsoleLogging = LogLevel.All;
-            EnableFileLogging = LogLevel.All;
+            EnableConsoleLogging = LogLevels.All;
+            EnableFileLogging = LogLevels.All;
             UseUtcTimestamp = false;
 
             LogDirectory = "logs";
@@ -42,8 +42,8 @@ namespace common
 
         #region Properties
 
-        private LogLevel EnableConsoleLogging { get; set; }
-        private LogLevel EnableFileLogging { get; set; }
+        private LogLevels EnableConsoleLogging { get; set; }
+        private LogLevels EnableFileLogging { get; set; }
         private string LogDirectory { get; set; }
         private Type Type { get; set; }
         private bool UseUtcTimestamp { get; set; }
@@ -74,22 +74,22 @@ namespace common
             sb.AppendLine(ex.Message);
             sb.AppendLine(ex.StackTrace);
             sb.Append(new string('*', 100));
-            LogMessage(sb.ToString(), LogLevel.Error);
+            LogMessage(sb.ToString(), LogLevels.Error);
         }
 
         public void LogError(string message)
         {
-            LogMessage(message, LogLevel.Error);
+            LogMessage(message, LogLevels.Error);
         }
 
         public void LogInfo(string message)
         {
-            LogMessage(message, LogLevel.Info);
+            LogMessage(message, LogLevels.Info);
         }
 
         public void LogWarn(string message)
         {
-            LogMessage(message, LogLevel.Warn);
+            LogMessage(message, LogLevels.Warn);
         }
 
         public void SetType(Type type)
@@ -101,22 +101,22 @@ namespace common
 
         #region Helper Methods
 
-        private bool IsConsoleLoggingEnabled(LogLevel logLevel)
+        private bool IsConsoleLoggingEnabled(LogLevels logLevel)
         {
             return IsLogLevelEnabled(EnableConsoleLogging, logLevel);
         }
 
-        private bool IsFileLoggingEnabled(LogLevel logLevel)
+        private bool IsFileLoggingEnabled(LogLevels logLevel)
         {
             return IsLogLevelEnabled(EnableFileLogging, logLevel);
         }
 
-        private bool IsLogLevelEnabled(LogLevel enabledLogLevels, LogLevel logLevel)
+        private bool IsLogLevelEnabled(LogLevels enabledLogLevels, LogLevels logLevel)
         {
             return (enabledLogLevels & logLevel) != 0;
         }
 
-        private void LogMessage(string message, LogLevel logLevel)
+        private void LogMessage(string message, LogLevels logLevel)
         {
             // guard clause - do nothing
             bool isFileLogLevelEnabled = IsFileLoggingEnabled(logLevel);
@@ -154,22 +154,9 @@ namespace common
 
         private void SetLoggingLevel(string[] logArgs)
         {
-            EnableConsoleLogging = logArgs.Any(a => a == "--no-console-log") ? LogLevel.None : EnableConsoleLogging;
-            EnableFileLogging = logArgs.Any(a => a == "--no-file-log") ? LogLevel.None : EnableConsoleLogging;
+            EnableConsoleLogging = logArgs.Any(a => a == "--no-console-log") ? LogLevels.None : EnableConsoleLogging;
+            EnableFileLogging = logArgs.Any(a => a == "--no-file-log") ? LogLevels.None : EnableConsoleLogging;
             UseUtcTimestamp = logArgs.Any(a => a == "--use-utc");
-        }
-
-        private void WriteToFile(string logTextValue, DateTime now)
-        {
-            string fileName = now.ToString("yyyy-MM-dd") + ".log";
-            string filePath = Path.Combine(LogDirectory, fileName);
-
-            if (!Directory.Exists(LogDirectory))
-            {
-                Directory.CreateDirectory(LogDirectory);
-            }
-
-            File.AppendAllText(filePath, logTextValue);
         }
 
         #endregion

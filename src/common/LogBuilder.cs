@@ -8,7 +8,7 @@ namespace common
 
         #region Constructors
 
-        public LogBuilder(string message, LogLevel logLevel, Type type, DateTime now)
+        public LogBuilder(string message, LogLevels logLevel, Type type, DateTime now)
         {
             Message = message;
             LogLevel = logLevel;
@@ -21,7 +21,7 @@ namespace common
         #region Properties
 
         public string FullMessage { get; private set; }
-        public LogLevel LogLevel { get; private set; }
+        public LogLevels LogLevel { get; private set; }
         public string Message { get; private set; }
         public DateTime Now { get; private set; }
         public string Type { get; private set; }

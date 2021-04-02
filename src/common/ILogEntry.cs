@@ -6,7 +6,7 @@ namespace common
     {
 
         string FullMessage { get; }
-        LogLevel LogLevel { get; }
+        LogLevels LogLevel { get; }
         string Message { get; }
         DateTime Now { get; }
         string Type { get; }
