@@ -3,7 +3,6 @@ using domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using service;
-using service_test.mock;
 using System;
 
 namespace service_test
@@ -15,7 +14,8 @@ namespace service_test
         [TestInitialize]
         public void SetUp()
         {
-            ApplicationLogger.Singleton = new MockApplicationLogger();
+            string[] logArgs = new string[] { "--no-console-log", "--no-file-log" };
+            ApplicationLogger.Singleton.Initialize(string.Empty, logArgs);
 
             Context = CreateDbContext();
             Service = new CreditCardService(Context);

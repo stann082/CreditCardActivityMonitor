@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace service
 {
-    public class CreditCardActivityProcessor
+    public class CreditCardActivityProcessor : AbstractBase
     {
 
         #region Constants
@@ -30,7 +30,7 @@ namespace service
 
         private static string DownloadsDir => DirectoryProvider.Singleton.DownloadsDir;
 
-        private static IApplicationLogger Logger => ApplicationLogger.Singleton;
+        private IApplicationLogger Logger { get { return GetApplicationLogger<CreditCardActivityProcessor>(); } }
 
         private List<CardActivityModel> PostedPayments { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using common;
+using common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,9 +15,14 @@ namespace app
 
         #region Constants
 
-        private const string ENV_KEY_LOG_DIR = "LOG_DIR";
-        private const string ENV_VALUE_LOG_DIR = "logs";
         private const string CONNECTION_STRING_NAME = "CreditCardDatabase";
+        private const string LOG_DIR = "logs";
+
+        #endregion
+
+        #region Properties
+
+        private static IApplicationLogger Logger { get { return GetApplicationLogger(); } }
 
         #endregion
 
@@ -27,31 +32,40 @@ namespace app
         {
             try
             {
-                InitializeApplicationEnvironment();
+                InitializeApplicationEnvironment(args);
 
                 IServiceCollection services = ConfigureServices();
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
                 serviceProvider.GetService<ConsoleApplication>().Run();
-
-#if DEBUG
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadLine();
-#endif
             }
             catch (Exception ex)
             {
-                ApplicationLogger.Singleton.LogError("An un expected error has occurred...");
-                ApplicationLogger.Singleton.LogError(ex);
+                Logger.LogError("An un expected error has occurred...");
+                Logger.LogError(ex);
             }
+
+#if DEBUG
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
+#endif
         }
 
         #endregion
 
         #region Helper Methods
 
+        public static IConfiguration LoadConfiguration()
+        {
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            return builder.Build();
+        }
+
         private static IServiceCollection ConfigureServices()
         {
-            ApplicationLogger.Singleton.LogInfo("Initializing services...");
+            Logger.LogInfo("Initializing services...");
 
             IServiceCollection services = new ServiceCollection();
 
@@ -71,36 +85,37 @@ namespace app
                 string value = Environment.GetEnvironmentVariable(key);
                 if (value == null)
                 {
-                    ApplicationLogger.Singleton.LogWarn("ENVVAR with key [{0}] not found. Using default value of [{1}].", key, defaultValue);
+                    Logger.LogWarn($"ENVVAR with key [{key}] not found. Using default value of [{defaultValue}].");
                     return defaultValue;
                 }
                 else
                 {
-                    ApplicationLogger.Singleton.LogInfo("ENVVAR with key [{0}] found. Using configured value of [{1}].", key, value);
+                    Logger.LogInfo($"ENVVAR with key [{key}] found. Using configured value of [{value}].");
                     return value;
                 }
             }
             catch (Exception ex)
             {
-                ApplicationLogger.Singleton.LogError(ex);
+                Logger.LogError(ex);
                 return defaultValue;
             }
         }
 
-        private static void InitializeApplicationEnvironment()
+        private static void InitializeApplicationEnvironment(string[] args)
         {
-            string logDir = GetLogEnvironmentVariables(ENV_KEY_LOG_DIR, ENV_VALUE_LOG_DIR);
-            ApplicationLogger.Singleton.Initialize(logDir);
+            Logger.Initialize(LOG_DIR, args);
             ApplicationEnvironment.Singleton.Initialize();
         }
 
-        public static IConfiguration LoadConfiguration()
-        {
-            IConfigurationBuilder builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        #endregion
 
-            return builder.Build();
+        #region Helper Methods
+
+        private static IApplicationLogger GetApplicationLogger()
+        {
+            IApplicationLogger logger = ApplicationLogger.Singleton;
+            logger.SetType(typeof(Program));
+            return logger;
         }
 
         #endregion

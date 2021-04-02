@@ -5,12 +5,14 @@ namespace common
     public interface IApplicationLogger
     {
 
-        void Initialize(string logDirectory);
+        void Initialize(string logDirectory, string[] logArgs);
 
         void LogError(Exception ex);
-        void LogError(string inputText, params object[] replacements);
-        void LogInfo(string inputText, params object[] replacements);
-        void LogWarn(string inputText, params object[] replacements);
+        void LogError(string message);
+        void LogInfo(string message);
+        void LogWarn(string message);
+
+        void SetType(Type type);
 
     }
 }

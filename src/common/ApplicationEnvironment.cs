@@ -2,7 +2,7 @@ using System;
 
 namespace common
 {
-    public class ApplicationEnvironment
+    public class ApplicationEnvironment : AbstractBase
     {
 
         public static ApplicationEnvironment Singleton = new ApplicationEnvironment();
@@ -31,6 +31,8 @@ namespace common
         public string ArchiveRootDir { get; private set; }
         public string DownloadsDir { get; private set; }
 
+        private IApplicationLogger Logger { get { return GetApplicationLogger<ApplicationEnvironment>(); } }
+
         #endregion
 
         #region Public Methods
@@ -41,14 +43,14 @@ namespace common
             if (archiveRootDirValue != null)
             {
                 ArchiveRootDir = archiveRootDirValue;
-                ApplicationLogger.Singleton.LogWarn($"Using overriden environment variable {ARCHIVE_ROOT_DIR_ENV_VAR} with value [{archiveRootDirValue}].");
+                Logger.LogWarn($"Using overriden environment variable {ARCHIVE_ROOT_DIR_ENV_VAR} with value [{archiveRootDirValue}].");
             }
 
             string downloadsDirValue = Environment.GetEnvironmentVariable(DOWNLOADS_DIR_ENV_VAR);
             if (downloadsDirValue != null)
             {
                 DownloadsDir = downloadsDirValue;
-                ApplicationLogger.Singleton.LogWarn($"Using overriden environment variable {DOWNLOADS_DIR_ENV_VAR} with value [{downloadsDirValue}].");
+                Logger.LogWarn($"Using overriden environment variable {DOWNLOADS_DIR_ENV_VAR} with value [{downloadsDirValue}].");
             }
         }
 
