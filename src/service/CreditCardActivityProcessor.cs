@@ -40,11 +40,6 @@ namespace service
 
         #region Public Methods
 
-        public void UnusedMethod()
-        {
-
-        }
-
         public void Process()
         {
             if (!Directory.Exists(DownloadsDir))
